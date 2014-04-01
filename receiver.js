@@ -1,7 +1,9 @@
-var io = require('socket.io-client'),
-Speaker = require('speaker'),
-HOST = 'localhost',
-PORT = 50010;
+var io = require('socket.io-client');
+var Stream = require('stream');
+var Speaker = require('speaker');
+var HOST = 'localhost';
+var PORT = 50010;
+var stream = new Stream();
 
 // create new socket instance
 var socket = io.connect(HOST, {
@@ -26,7 +28,23 @@ function onSocketConnected() {
 }
 
 function onReceiveNewChunk(data) {
-
+	console.log("received next chunk");
+//	console.log(data.chunk[0]);
+//	process.stdout.write("akshay");
+//	process.stdout.write(String.fromCharCode(data.chunk[0]));
+	var str='';
+	for (i in data.chunk){
+    	str += String.fromCharCode(data.chunk[i]);
+//    	speaker.write(String.fromCharCode(data.chunk[i]));
+	}
+//	process.stdout.write(str);
+	speaker.write(str);
+	socket.emit("next chunk");
+	/*stream.pipe = function(dest) {
+  		dest.write(data.chunk)
+	};
+	console.log("piped");
+	stream.pipe(process.stdout);*/
 }
 
 function onBroadcastReceived(data) {
@@ -34,3 +52,4 @@ function onBroadcastReceived(data) {
 }
 
 socket.emit("data", {data: "akshay mittal"});
+socket.emit("next chunk");

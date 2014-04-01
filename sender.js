@@ -2,13 +2,16 @@ var io = require('socket.io');
 var fs = require('fs');
 var wav = require('wav');
 
+// listen on this port for receiver connections
 var PORT = 50010;
 socket = io.listen(PORT);
 socket.sockets.on('connection', onClientConnection);
 
+// chunk size of the audio file sent each time
 var size = 1024;
-var file = fs.createReadStream('song.wav');
+// last chunk that was broadcasted
 var chunk;
+var file = fs.createReadStream('song.wav');
 
 function onClientConnection(client) {
 	console.log('CONNECTED: ' + client.id);
@@ -25,7 +28,7 @@ function onReceiveData(data) {
 function onSendNextChunk() {
 	chunk = file.read(size);
 	if (chunk !== null) {
-		this.broadcast.emit("new chunk", {data: chunk});
-		this.emit("new chunk", {data: chunk});
+		//this.broadcast.emit("new chunk", {chunk: chunk});
+		this.emit("new chunk", {chunk: chunk});
 	}
 }
