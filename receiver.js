@@ -22,7 +22,7 @@ socket.on("connect", onSocketConnected);
 function onSocketConnected() {
     console.log("Connected to sender");
 
-    socket.on("broad", onBroadcastReceived);
+    socket.on("broadcast", onBroadcastReceived);
     socket.on("new chunk", onReceiveNewChunk);
 }
 
@@ -31,7 +31,6 @@ function onReceiveNewChunk(data) {
     var buffer = new Buffer(data.chunk);
     console.log(buffer);
     speaker.write(buffer).toString('utf8');
-    socket.emit("next chunk");
 }
 
 function onBroadcastReceived(data) {
@@ -39,4 +38,3 @@ function onBroadcastReceived(data) {
 }
 
 socket.emit("data", {data: "akshay mittal"});
-socket.emit("next chunk");
